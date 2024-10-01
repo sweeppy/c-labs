@@ -1,2 +1,2 @@
 # c-labs
-Finished SPbPU c++ labs
+Completed SPbPU c++ labs
