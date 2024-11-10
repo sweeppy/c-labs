@@ -93,9 +93,10 @@ int main()
     {
         cout << "Task 1.2" << '\n';
 
-        cout << "Введите y:" << '\n';
         int y;
         int newY = 0;
+
+        cout << "Введите y:" << '\n';
         cin >> y;
         unsigned short size = sizeof(y) * 8;
 
@@ -108,7 +109,7 @@ int main()
 
         unsigned short unitsCount = 0;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) // сдвиг едениц
         {
             if ((y >> i) & 1)
             {
@@ -152,24 +153,24 @@ int main()
                 success = true;
         }
         cout << "1)" << (y << n) << '\n';
-        int y1 = (y & 1);
+        
         bool isDevidedBy2 = ((y & 1) == 0);
-
         cout << "2) y делиться на 2: " << isDevidedBy2 << '\n';
+
         bool isDevidedBy4 = ((y & 3) == 0);
         cout << "2) y делиться на 4: " << isDevidedBy4 << '\n';
         
-        unsigned short firstUnitNumbet = 0;
+        unsigned short firstUnitNumber = 0;
         unsigned short size = sizeof(y) * 8;
         for (int i = (size - 1); i >= 0; i--)
         {
             if ((y >> i) & 1)
             {
-                firstUnitNumbet = i;
+                firstUnitNumber = i;
                 break;
             }
         }
-        cout << "3) Целая часть log2(y): " << firstUnitNumbet << '\n';
+        cout << "3) Целая часть log2(y): " << firstUnitNumber << '\n';
     }
 
     /**
@@ -262,14 +263,10 @@ int main()
          */
 
          int i = 10, j = 12, k;
-         k = MAX(i, j); // k = 12
-         k = MAX(j, i) * 2; // k = 24
-         k = MAX(j, i+3); // k = 13
+         k = MAX(i, j); // i = 10, j = 12, k = 12
+         k = MAX(j, i) * 2; // i = 10, j = 12, k = 24 
+         k = MAX(j, i+3); // i = 10, j = 12, k = 13
          k = MAX(i--, j++); // k = 13 , j = 14 (побочный эффект)
-         //* Убираю побочный эффект:
-         j++;
-         i--;
-         k = MAX(i, j);
          //* Избежать побочных эффектов невозможно при передаче данных, которые изменяются в процессе обработки
     }
 
@@ -289,7 +286,7 @@ int main()
         int x1 = 1, y1 = -1;
         EXCHANGE(x1,y1);
 
-        int x2=100, y2=-100;
+        int x2 = 100, y2 = -100;
         EXCHANGE(x2,y2);
         //* Если значения разного типа, произойдет потеря точности
     }
@@ -337,7 +334,7 @@ int main()
      * Уберите из кода определения макросов NNN и MMM из прошлого задания и
      * приведите команды компиляции, которые заставят переменную iNN принять
      * нужное значение.
-     * *clang++ lab2.cpp -g -D NNN -D MMM -o l2
+     * *clang++ lab2.cpp -g -D NNN -D MMM
      * 
      * Проверьте их работоспособность.
      */
@@ -404,14 +401,14 @@ int main()
      * до любых функций (хотя правила компиляции не запрещают подключить их
      * тут).
      */
-#define NDEBUG
-#ifdef NDEBUG
-    #include"2.h"
+    
+#ifndef NDEBUG
+#include "1.h"
     MyEnum value1 = My1;
     MyEnum value2 = My2;
     MyEnum value3 = My3;
 #else
-#include "1.h"
+#include"2.h"
     MyEnum value1 = My1;
     MyEnum value2 = My2;
     MyEnum value3 = My3;
@@ -456,7 +453,6 @@ int main()
     {
         char *pChar = "Some text";
         char iChar = pChar[3];
-        //cout << iChar << "\n";
         //* pChar[1] = 'O'; вызовет ошибку Exception has occurred.EXC_BAD_ACCESS (code=2, address=0x100003ebf) так как строковые литералы невозможно изменить
     }
 
