@@ -8,6 +8,7 @@
 
 #include "other.h"
 #include "book.h"
+#include "matrix.h"
 
 #include <cmath>
 
@@ -506,6 +507,43 @@ int main()
      * Фибоначчи: 1 и 0. Выполняйте эту формулу итеративно и выведите первые 40
      * чисел Фибоначчи.
      */
+
+    Matrix vector; // Создание вектор матрицы
+    m_zero(&vector, 1, 2);
+
+    m_set(&vector, 0, 0, 1);
+
+
+    Matrix M; // Создание центральной матрицы
+    m_zero(&M, 2, 2);
+    m_set(&M, 0, 0, 1);
+    m_set(&M, 0, 1, 1);
+    m_set(&M, 1, 0, 1);
+
+    int fib_count = 40;
+    for (int i = 0; i < fib_count; i++)
+    {
+        Matrix temp;
+        m_zero(&temp, vector.height, M.width);
+
+        int isSuccess = m_mult(&vector, &M, &temp);
+        if (isSuccess != 0)
+        {
+            printf("\nПроизошла ошибка при умножении матриц!\n");
+            m_free(&temp);
+            m_free(&vector);
+            m_free(&M);
+            return 1;
+        }
+        m_copy(&temp, &vector);
+
+        m_free(&temp);
+    }
+    printf("\nЧисло фибаначчи под номером %d равно: %d.\n",
+    fib_count, int(m_get(&vector, 0, 0)));
+
+    m_free(&vector);
+    m_free(&M);
 
     return 0;
 }
