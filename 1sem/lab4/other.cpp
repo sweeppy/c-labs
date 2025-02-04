@@ -1,21 +1,20 @@
 #include "other.h"
-#include<iostream>
-#include<cassert>
+#include <iostream>
+#include <cassert>
 using std::cout;
 
 void inc_by_value(int value)
 {
     value++;
 }
-void inc_by_pointer(int* value)
+void inc_by_pointer(int *value)
 {
     value++;
 }
-void inc_by_reference(int& value)
+void inc_by_reference(int &value)
 {
     value++;
 }
-
 
 void swap(int *first, int *second)
 {
@@ -23,13 +22,12 @@ void swap(int *first, int *second)
     *first = *second;
     *second = temp;
 }
-void swap(int& first, int& second)
+void swap(int &first, int &second)
 {
     int temp = first;
     first = second;
     second = temp;
 }
-
 
 int findMinInArray(const int *array, int length)
 {
@@ -59,13 +57,10 @@ int findMinIn2DArray(int **array, int rows, int columns)
     return min;
 }
 
-
-
-
 short my_str_cmp(const char *str1, const char *str2)
 {
     short res = 0;
-    while(*str1 != '\0' && *str2 != '\0')
+    while (*str1 != '\0' && *str2 != '\0')
     {
         if (*str1 != *str2)
         {
@@ -78,17 +73,14 @@ short my_str_cmp(const char *str1, const char *str2)
     return res;
 }
 
-
-
-
 bool isLeapYear(unsigned short year)
 {
     return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
 }
 
 int nDayTab[2][12] = {
-    {31,28,31,30,31,30,31,31,30,31,30,31}, //невисокосный год
-    {31,29,31,30,31,30,31,31,30,31,30,31}};  //високосный год
+    {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},  // невисокосный год
+    {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}}; // високосный год
 
 unsigned short day_of_year(unsigned short day, unsigned short month, unsigned short year)
 {
@@ -101,7 +93,7 @@ unsigned short day_of_year(unsigned short day, unsigned short month, unsigned sh
     return dayOfYear;
 }
 
-short* day_of_month(unsigned short day, unsigned short year)
+short *day_of_month(unsigned short day, unsigned short year)
 {
 
     short whatYear = isLeapYear(year) ? 1 : 0;
@@ -115,14 +107,11 @@ short* day_of_month(unsigned short day, unsigned short year)
 
     short *dayAndMonth = new short[2];
     dayAndMonth[0] = day;
-    dayAndMonth[1] = ++month; // так как счет месяце начинаетяс с 0 (для правильной индексации nDatTab)
+    dayAndMonth[1] = ++month; // так как счет месяце начинается с 0 (для правильной индексации nDatTab)
     return dayAndMonth;
 }
 
-
-
-
-void add_unique(int *&arr, int& length, int newValue)
+void add_unique(int *&arr, int &length, int newValue)
 {
     for (int i = 0; i < length; i++)
     {
@@ -131,7 +120,8 @@ void add_unique(int *&arr, int& length, int newValue)
     }
     length++;
     int *newArr = new int[length];
-    for (int i = 0; i < length - 1; i++) {
+    for (int i = 0; i < length - 1; i++)
+    {
         newArr[i] = arr[i];
     }
     newArr[length - 1] = newValue;
@@ -147,17 +137,13 @@ void print_array(int *arr, int length)
     cout << std::endl;
 }
 
-
-
 unsigned int sum_of_natural(unsigned int n)
 {
     if (n == 1)
         return 1;
-   
+
     return n + sum_of_natural(n - 1);
 }
-
-
 
 const char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
 
@@ -197,14 +183,13 @@ int encode32(const char *raw_data, int raw_size, char *dst)
                 current_value = 0;
             }
         }
-
     }
 
     if (bit_pos > 0) // Если остались незакодированные биты(дополнение нулями)
-        {
-            current_value = current_value << (5 - bit_pos);
-            dst[dst_pos] = table[current_value];
-        }
+    {
+        current_value = current_value << (5 - bit_pos);
+        dst[dst_pos] = table[current_value];
+    }
     return 0;
 }
 
@@ -219,7 +204,7 @@ int decode32(const char *encoded_data, int encoded_size, char *dst)
 
     for (int i = 0; i < encoded_size; i++)
     {
-        int code_number = -1; // Чило закондированное в символ (от 0 до 31)
+        int code_number = -1; // Число закодированное в символ (от 0 до 31)
         for (int j = 0; j < 32; j++)
         {
             if (table[j] == encoded_data[i])
@@ -247,8 +232,8 @@ int decode32(const char *encoded_data, int encoded_size, char *dst)
             }
         }
     }
-    
-    if (bit_pos > 0) // Если остались неразкодированые биты
+
+    if (bit_pos > 0) // Если остались не раскодированные биты
     {
         current_value <<= 8 - bit_pos;
         dst[dst_pos] = current_value;
@@ -256,7 +241,6 @@ int decode32(const char *encoded_data, int encoded_size, char *dst)
 
     return 0;
 }
-
 
 void var_args(int first, ...)
 {
@@ -279,11 +263,9 @@ void var_args(int first, ...)
     cout << "Всего параметров: " << count << std::endl;
 }
 
-
-
 int *my_min(int *arr, int size)
 {
-    int* min_ptr = &arr[0];
+    int *min_ptr = &arr[0];
     for (int i = 1; i < size; i++)
     {
         if (arr[i] < *min_ptr)

@@ -31,7 +31,6 @@
 
 int nTwin = 1;
 namespace TwinSpace { int nTwin = 2; }
-
 int main()
 {
 
