@@ -145,7 +145,7 @@ int main()
         }
         catch (const std::exception &e)
         {
-            std::cerr << RED << e.what() << '\n';
+            std::cerr << RED << e.what() << RESET << '\n';
         }
 
         try
@@ -163,7 +163,7 @@ int main()
         }
         catch (const std::exception &e)
         {
-            std::cerr << RED << e.what() << '\n';
+            std::cerr << RED << e.what() << RESET << '\n';
         }
     }
     cout << endl;
@@ -218,7 +218,7 @@ int main()
         }
         catch (const std::exception &e)
         {
-            std::cerr << RED << "Error during write: " << e.what() << std::endl;
+            std::cerr << RED << "Error during write: " << e.what() << RESET << std::endl;
         }
 
         base32File.seek(0);
@@ -228,7 +228,7 @@ int main()
         try
         {
             size_t bytesRead = base32File.read(readBuffer, sizeof(readBuffer));
-            std::cout << "Bytes read: " << bytesRead << std::endl;
+            std::cout << "Bytes read: " << bytesRead << ". Data: " << BLUE << readBuffer << RESET << std::endl;
             std::cout << "Decoded data: " << readBuffer << std::endl;
         }
         catch (const std::exception &e)
@@ -263,14 +263,46 @@ int main()
      * например, котенка из лабораторной №3 прошлого семестра. Посмотрите,
      * получилось ли добиться уменьшения размера хранимых данных.
      */
-
+    cout << endl;
     {
-        const char *testData = "ABCABCABCDDDFFFFFF";
-        size_t testDataSize = strlen(testData);
+        const char *asciiArt =
+            "            _____________________________________\n"
+            "           / Here user input is shown. This line \\\n"
+            "           \\ must be at most 40 characters long. /\n"
+            "            ------------------------------------\n"
+            "               \\\n"
+            "                \\\n"
+            "                  /\\_/\\  (\n"
+            "                 ( ^.^ ) _)\n"
+            "                   \\\"/  (\n"
+            "                 ( | | )\n"
+            "                (__d b__)\n";
+        size_t testDataSize = strlen(asciiArt);
 
         RleFile RLE_file("txt_files/RleFile.txt", "w+");
-        RLE_file.write(testData, testDataSize);
+
+        size_t bytesWritten = RLE_file.write(asciiArt, testDataSize);
+        std::cout << "Bytes written: " << bytesWritten << std::endl;
+
+        RLE_file.seek(0);
+
+        char buffer[300];
+        size_t bytesRead = RLE_file.read(buffer, sizeof(buffer));
+        std::cout << "Bytes read: " << bytesRead << ". Data: \n"
+                  << BLUE << buffer << RESET << std::endl;
+
+        if (std::strcmp(asciiArt, buffer) == 0)
+        {
+            std::cout << GREEN << "Test passed: Data matches!" << RESET << std::endl;
+        }
+        else
+        {
+            std::cerr << RED << "Test failed: Data does not match!" << RESET << std::endl;
+        }
     }
+    cout << endl;
+
+    // Получилось исходные 369 байт сжать до 174 байт.
 
     /**
      * Задание 2.3. Конструкторы и деструкторы базового и производного классов.
@@ -280,6 +312,39 @@ int main()
      * отметьте, в каком порядке вызываются конструкторы и деструкторы при
      * инициализации и деинициализации этих классов.
      */
+    cout << endl;
+    {
+        std::cout << "Creating Base32File object..." << std::endl;
+        {
+            Base32File base32File("txt_files/testDerivedClasses/b32.txt", "w+");
+        }
+        std::cout << "Base32File object destroyed." << std::endl;
+
+        std::cout << "\nCreating RleFile object..." << std::endl;
+        {
+            RleFile rleFile("txt_files/testDerivedClasses/rle.txt", "w+");
+        }
+        std::cout << "RleFile object destroyed." << std::endl;
+    }
+    cout << endl;
+
+    /*
+     Creating Base32File object...
+    *   BaseFile parameterized constructor (with path and mode) called for object: 0x16d7e6ab0
+    *   Base32File parameterized constructor called for object: 0x16d7e6ab0
+    *   Base32File destructor called for object: 0x16d7e6ab0
+    *   BaseFile destructor called for object: 0x16d7e6ab0
+     Base32File object destroyed.
+    */
+
+    /*
+     Creating RleFile object...
+    *  BaseFile parameterized constructor (with path and mode) called for object: 0x16d6daaa0
+    *  RleFile parameterized constructor called for object: 0x16d6daaa0
+    *  RleFile destructor called for object: 0x16d6daaa0
+    *  BaseFile destructor called for object: 0x16d6daaa0
+     RleFile object destroyed.
+    */
 
     /**
      * Задание 2.4. Ранее связывание.
@@ -290,32 +355,75 @@ int main()
      * запись.
      */
 
-    /* {
-        BaseFile bf(...);
-        Base32File b32f(...);
-        RleFile rf(...);
+    {
+        BaseFile bf("txt_files/numbers1/bf.txt", "w+");
+        Base32File b32f("txt_files/numbers1/b32f.txt", "w+");
+        RleFile rf("txt_files/numbers1/rf.txt", "w+");
 
         int n = 123456;
-        if (n < 0) { bf.write(...); }
-        while (n > 0) {
-            bf.write(...);
-            // ...
+        if (n < 0 && n != 0)
+        {
+            rf.write("-", 1);
+            n = -n;
+        }
+
+        int count = (n == 0) ? 1 : 0;
+        for (int temp = n; temp > 0; temp /= 10)
+        {
+            count++;
+        }
+        while (n > 0)
+        {
+            int first_number = static_cast<char>(n / static_cast<int>(std::pow(10, count - 1)));
+            char digit = first_number + '0';
+            bf.write(&digit, 1);
+            n = n - first_number * (pow(10, count - 1));
+            count--;
         }
 
         n = 123456;
-        if (n < 0) { b32f.write(...); }
-        while (n > 0) {
-            b32f.write(...);
-            // ...
+        if (n < 0 && n != 0)
+        {
+            rf.write("-", 1);
+            n = -n;
+        }
+
+        count = (n == 0) ? 1 : 0;
+        for (int temp = n; temp > 0; temp /= 10)
+        {
+            count++;
+        }
+        while (n > 0)
+        {
+            int first_number = static_cast<char>(n / static_cast<int>(std::pow(10, count - 1)));
+            char digit = first_number + '0';
+            b32f.write(&digit, 1);
+            n = n - first_number * (pow(10, count - 1));
+            count--;
         }
 
         n = 123456;
-        if (n < 0) { rf.write(...); }
-        while (n > 0) {
-            rf.write(...);
-            // ...
+        if (n < 0 && n != 0)
+        {
+            rf.write("-", 1);
+            n = -n;
         }
-    } */
+
+        count = (n == 0) ? 1 : 0;
+        for (int temp = n; temp > 0; temp /= 10)
+        {
+            count++;
+        }
+
+        while (n > 0)
+        {
+            int first_number = static_cast<char>(n / static_cast<int>(std::pow(10, count - 1)));
+            char digit = first_number + '0';
+            rf.write(&digit, 1);
+            n = n - first_number * (pow(10, count - 1));
+            count--;
+        }
+    }
 
     /**
      * Задание 2.5. Передача объекта по ссылке / указателю.
@@ -335,6 +443,24 @@ int main()
      * что и код, который вы написали выше? Почему?
      */
 
+    {
+        int n = -123456;
+        BaseFile bf("txt_files/numbers2/bf.txt", "w+");
+        Base32File b32f("txt_files/numbers2/b32f.txt", "w+");
+        RleFile rf("txt_files/numbers2/rf.txt", "w+");
+
+        write_int(bf, n);
+        write_int(b32f, n);
+        write_int(rf, n);
+    }
+    /*
+        Результат отличается. В данном случае для каждого из фалов будет вызван
+        write(...) из BaseFile. Это происходит из-за того, что метод write(...)
+        объявлен в BaseFile без ключевого слова virtual, что приводит к выполнению
+        write(...) из базового класса, при передачи производного класса по ссылке.
+        То есть выбор реализации функции определяется не типом объекта, а типом указателя.
+    */
+
     /**
      * Задание 2.6. Виртуальные функции, позднее связывание.
      *
@@ -345,6 +471,23 @@ int main()
      * Как изменилось поведение при вызове функции `write_int` для производных
      * классов? Почему?
      */
+    /*
+        Если метод не виртуальный, то компилятор выполняет статическое связывание.
+        Это означает, что вызываемый метод определяется на этапе компиляции, исходя
+        из типа указателя или ссылки.
+
+        Если метод виртуальный, то компилятор выполняет динамическое связывание.
+        Это означает, что вызываемый метод определяется на этапе выполнения,
+        исходя из реального типа объекта.
+
+        При объявлении виртуальных функций в классе, компилятор добавляет
+        в объект этого класса указатель на таблицу виртуальных функций (vtable).
+        Это увеличивает размер объекта на размер указателя. (В моем случа на 8 байт).
+
+        Теперь при вызове функции `write_int` все работает правильно, так как
+        функция write переопределяется и выполняется своя реализация для каждого
+        объекта класса.
+    */
 
     /**
      * Задание 2.7. Виртуальный деструктор.
@@ -356,18 +499,32 @@ int main()
      *
      * Исправьте эту ситуацию.
      */
-
-    /* {
+    cout << endl;
+    {
         BaseFile *files[] = {
-            new BaseFile(...),
-            new RleFile(...),
-            new Base32File(...),
+            new BaseFile("txt_files/destructors/bf.txt", "w+"),
+            new Base32File("txt_files/destructors/b32f.txt", "w+"),
+            new RleFile("txt_files/destructors/rf.txt", "w+"),
         };
 
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i)
+        {
             files[i]->write("Hello!", 6);
         }
-    } */
+
+        for (int i = 0; i < 3; i++)
+        {
+            delete files[i];
+        }
+    }
+    cout << endl;
+
+    /*
+        Без виртуального деструктора деструктор будет вызван только у базового класса,
+        у производных классов деструкторы вызваны не будут. Поэтому, если производные
+        классы выделяют дополнительные ресурсы и освобождают их в своем деструкторе,
+        то без виртуального деструктора могут быть проблемы с утечками.
+    */
 
     /**
      * Задание 2.8. Массив объектов производных классов.

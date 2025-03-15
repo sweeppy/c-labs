@@ -5,7 +5,11 @@
 using std::cout;
 using std::endl;
 
-BaseFile::BaseFile() : file(nullptr) {}
+BaseFile::BaseFile() : file(nullptr)
+{
+    std::cout << BLUE << "BaseFile default constructor called for object: " << this
+              << RESET << std::endl;
+}
 
 BaseFile::BaseFile(const char *path, const char *mode)
 {
@@ -14,6 +18,9 @@ BaseFile::BaseFile(const char *path, const char *mode)
     {
         throw std::runtime_error("Error in constructor. Failed to open file");
     }
+    std::cout << BLUE
+              << "BaseFile parameterized constructor (with path and mode) called for object: "
+              << this << RESET << std::endl;
 }
 
 BaseFile::BaseFile(FILE *f) : file(f)
@@ -22,16 +29,19 @@ BaseFile::BaseFile(FILE *f) : file(f)
     {
         throw std::runtime_error("Error in constructor. Failed to open file");
     }
+    std::cout << BLUE
+              << "BaseFile parameterized constructor (with *FILE) called for object: "
+              << this << RESET << std::endl;
 }
 
 BaseFile::~BaseFile()
 {
     if (file)
     {
-        cout << YELLOW << "File destructor called for object: " << this << RESET << endl;
         fclose(file);
         file = nullptr;
     }
+    std::cout << YELLOW << "BaseFile destructor called for object: " << this << RESET << std::endl;
 }
 
 bool BaseFile::is_open() const
@@ -107,6 +117,14 @@ Base32File::Base32File(const char *path, const char *mode, const char *customTab
     {
         throw std::invalid_argument("Table must contain exactly 32 characters");
     }
+    std::cout << BLUE
+              << "Base32File parameterized constructor called for object: "
+              << this << RESET << std::endl;
+}
+Base32File::~Base32File()
+{
+    std::cout << YELLOW << "Base32File destructor called for object: " << this
+              << RESET << std::endl;
 }
 
 size_t Base32File::write(const void *buf, size_t n_bytes)
@@ -238,30 +256,53 @@ int Base32File::decode32(const char *encoded_data, int encoded_size, char *dst)
 
 // RLE FILE
 
-RleFile::RleFile(const char *path, const char *mode) : BaseFile(path, mode) {}
+RleFile::RleFile(const char *path, const char *mode) : BaseFile(path, mode)
+{
+    std::cout << BLUE
+              << "RleFile parameterized constructor called for object: "
+              << this << RESET << std::endl;
+}
+
+RleFile::~RleFile()
+{
+    std::cout << YELLOW << "RleFile destructor called for object: " << this
+              << RESET << std::endl;
+}
 
 size_t RleFile::write(const void *buf, size_t n_bytes)
 {
     size_t output_size;
-    const char *encodedData = encode(static_cast<const char *>(buf), n_bytes, output_size);
+    const char *encodedData = encodeRLE(static_cast<const char *>(buf), n_bytes, output_size);
 
     size_t result = BaseFile::write_raw(encodedData, output_size);
     delete[] encodedData;
     return result;
 }
 
-// size_t RleFile::read(void *buf, size_t max_bytes)
-// {
-//     return size_t();
-// }
+size_t RleFile::read(void *buf, size_t max_bytes)
+{
+    char *encodedData = new char[max_bytes];
+    size_t readSize = BaseFile::read_raw(encodedData, max_bytes);
 
-char *RleFile::encode(const char *data, size_t data_size, size_t &output_size)
+    char *decodedData = static_cast<char *>(buf);
+    if (decodeRLE(encodedData, readSize, decodedData) != 0)
+    {
+        delete[] encodedData;
+        throw std::runtime_error("Failed to decode data");
+    }
+
+    delete[] encodedData;
+    return readSize;
+}
+
+char *RleFile::encodeRLE(const char *data, size_t data_size, size_t &output_size)
 {
     if (!data || data_size == 0)
     {
         output_size = 0;
         return nullptr;
     }
+
     char *dst = new char[data_size * 2];
     size_t dst_pos = 0;
     size_t data_pos = 0;
@@ -288,15 +329,18 @@ char *RleFile::encode(const char *data, size_t data_size, size_t &output_size)
         }
         else
         {
-            int non_repeat_count = 0;
+            int non_repeat_count = 2;
+
             while (data_pos + non_repeat_count < data_size &&
-                   (non_repeat_count == 0 || data[data_pos + non_repeat_count] != data[data_pos + non_repeat_count - 1]) &&
+                   (data[data_pos + non_repeat_count] != data[data_pos + non_repeat_count - 1]) &&
+                   (data[data_pos + non_repeat_count + 1] != data[data_pos + non_repeat_count]) &&
                    non_repeat_count <= 127)
             {
                 non_repeat_count++; // count of non-repeatable symbols in a row
             }
 
             dst[dst_pos++] = static_cast<char>(-non_repeat_count); // the number below zero before symbols
+
             for (int i = 0; i < non_repeat_count; i++)
             {
                 dst[dst_pos++] = data[data_pos++]; // symbols
@@ -307,7 +351,74 @@ char *RleFile::encode(const char *data, size_t data_size, size_t &output_size)
     return dst;
 }
 
-// int RleFile::decode(const char *data, size_t data_size, const char *dst)
-// {
-//     return 0;
-// }
+int RleFile::decodeRLE(const char *data, size_t data_size, char *dst)
+{
+    if (!data || data_size == 0)
+    {
+        return 1;
+    }
+
+    size_t data_pos = 0;
+    size_t dst_pos = 0;
+
+    while (data_pos < data_size)
+    {
+        char count_symbol = data[data_pos++];
+        size_t now_count = std::abs(static_cast<int>(count_symbol));
+
+        if (static_cast<int>(count_symbol) > 0) // repeatable symbols in a row
+        {
+            if (data_pos >= data_size)
+            {
+                return 2;
+            }
+
+            char symbol = data[data_pos++];
+            for (size_t i = 0; i < now_count; i++)
+            {
+                dst[dst_pos++] = symbol;
+            }
+        }
+        else // unrepeatable symbols in a row
+        {
+            if (data_pos + now_count > data_size)
+            {
+                return 3;
+            }
+
+            for (size_t i = 0; i < now_count; i++)
+            {
+                dst[dst_pos++] = data[data_pos++];
+            }
+        }
+    }
+
+    return 0;
+}
+
+// Non classes function
+
+void write_int(BaseFile &file, int n)
+{
+
+    if (n < 0 && n != 0)
+    {
+        file.write("-", 1);
+        n = -n;
+    }
+
+    int count = (n == 0) ? 1 : 0;
+    for (int temp = n; temp > 0; temp /= 10)
+    {
+        count++;
+    }
+
+    while (n > 0)
+    {
+        int first_number = static_cast<int>(n / std::pow(10, count - 1));
+        char digit = static_cast<char>(first_number + '0');
+        file.write(&digit, 1);
+        n = n - first_number * static_cast<int>(std::pow(10, count - 1));
+        count--;
+    }
+}

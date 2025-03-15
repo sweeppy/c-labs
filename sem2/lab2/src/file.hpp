@@ -12,7 +12,7 @@ public:
     BaseFile(const char *path, const char *mode);
     BaseFile(FILE *f);
 
-    ~BaseFile();
+    virtual ~BaseFile();
 
     bool is_open() const;
     bool can_read() const;
@@ -34,6 +34,9 @@ private:
 
 public:
     Base32File(const char *path, const char *mode, const char *customTable = DEFAULT_TABLE);
+
+    ~Base32File();
+
     size_t write(const void *buf, size_t n_bytes);
     size_t read(void *buf, size_t max_bytes);
 
@@ -49,10 +52,17 @@ class RleFile : public BaseFile
 {
 public:
     RleFile(const char *path, const char *mode);
+
+    ~RleFile();
+
     size_t write(const void *buf, size_t n_bytes);
-    // size_t read(void *buf, size_t max_bytes);
+    size_t read(void *buf, size_t max_bytes);
 
 private:
-    char *encode(const char *data, size_t data_size, size_t &output_size);
-    // int decode(const char *data, size_t data_size, const char *dst);
+    char *encodeRLE(const char *data, size_t data_size, size_t &output_size);
+    int decodeRLE(const char *data, size_t data_size, char *dst);
 };
+
+// Non classes function
+
+void write_int(BaseFile &file, int n);

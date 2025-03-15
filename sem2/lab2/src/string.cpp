@@ -48,7 +48,7 @@ MyString::~MyString()
 {
     if (data)
     {
-        std::cout << YELLOW << "Destroying: " << this << RESET << std::endl;
+        std::cout << YELLOW << "String destructor for object " << this << " called" << RESET << std::endl;
         free_memory();
     }
 }

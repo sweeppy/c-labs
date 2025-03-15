@@ -27,6 +27,11 @@ build/leaks.out: $(objects) src/main.cpp build/folders
 # * Folders target
 build/folders:
 	mkdir -p txt_files
+	mkdir -p txt_files/testDerivedClasses
+	mkdir -p txt_files/numbers1
+	mkdir -p txt_files/numbers2
+	mkdir -p txt_files/destructors
+
 
 leaks: build/leaks.out
 	leaks --atExit -- build/leaks.out
