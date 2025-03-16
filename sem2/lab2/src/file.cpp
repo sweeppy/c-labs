@@ -1,5 +1,4 @@
 #include "file.hpp"
-#include <cstdio>
 #include "colors.hpp"
 
 using std::cout;
@@ -109,6 +108,13 @@ size_t BaseFile::read(void *buf, size_t max_bytes)
 }
 
 // BASE 32 FILE
+
+Base32File::Base32File() : BaseFile()
+{
+    std::cout << BLUE
+              << "Base32File default constructor called for object: "
+              << this << RESET << std::endl;
+}
 
 Base32File::Base32File(const char *path, const char *mode, const char *customTable)
     : BaseFile(path, mode), table(customTable)
@@ -398,7 +404,7 @@ int RleFile::decodeRLE(const char *data, size_t data_size, char *dst)
 
 // Non classes function
 
-void write_int(BaseFile &file, int n)
+void write_int(IFile &file, int n)
 {
 
     if (n < 0 && n != 0)

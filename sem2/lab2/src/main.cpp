@@ -18,6 +18,7 @@
 #include "string.hpp"
 #include "file.hpp"
 #include "colors.hpp"
+#include "file2.hpp"
 
 using std::cout;
 using std::endl;
@@ -538,17 +539,62 @@ int main()
      * указателей на базовый класс, как это было сделано выше. Реализуйте ту же
      * логику, используя массив указателей на объекты базового класса.
      */
+    cout << endl;
+    {
+        BaseFile *base_files = new BaseFile[2];
+        base_files[0] = BaseFile("txt_files/wrongArray/bf1.txt", "w+");
+        base_files[1] = BaseFile("txt_files/wrongArray/bf2.txt", "w+");
 
-    /* {
-        BaseFile *base_files = new BaseFile[2] { BaseFile(...), BaseFile(...) };
-        BaseFile *b32_files = new Base32File[2] { Base32File(...), Base32File(...) };
-        for (int i = 0; i < 2; ++i) {
+        Base32File *b32_files = new Base32File[2];
+        b32_files[0] = Base32File("txt_files/wrongArray/b32f1.txt", "w+");
+        b32_files[1] = Base32File("txt_files/wrongArray/b32f2.txt", "w+");
+        for (int i = 0; i < 2; ++i)
+        {
             base_files[i].write("Hello!", 6);
             b32_files[i].write("Hello!", 6);
         }
-        delete [] base_files;
-        delete [] b32_files;
-    } */
+        delete[] base_files;
+        delete[] b32_files;
+    }
+    cout << endl;
+
+    /*
+    a)  Компиляция происходит, потому что BaseFile это конкретный класс и компилятор
+        знает как выделить под него память, ровно так же как и Base32File. однако
+        в случае Base32File компилятор предполагает, что каждый элемент имеет размер
+        BaseFile; это может привести к проблемам.
+
+    б)  Ошибки которые происходят: во-первых запись в файлы не происходят, так как
+        создаются временные объекты BaseFile и Base32File, которые после копирования
+        в элементы массива удаляются. Во-вторых в случае Base32File будут ошибки при
+        попытке доступа к его полям, которых нет у BaseFile. В-третьих компилятор будет
+        использовать статическое связывание, т.е. будет вызываться реализация методов
+        BaseFile, даже если они будут переопределены в Base32File;
+    */
+
+    // Исправленный код:
+    cout << endl;
+    {
+        BaseFile *base_files[] = {
+            new BaseFile("txt_files/array/bf1.txt", "w+"),
+            new BaseFile("txt_files/array/bf2.txt", "w+")};
+        BaseFile *base32_files[] = {
+            new Base32File("txt_files/array/b32f1.txt", "w+"),
+            new Base32File("txt_files/array/b32f2.txt", "w+")};
+
+        for (int i = 0; i < 2; i++)
+        {
+            base_files[i]->write("Hello!", 6);
+            base32_files[i]->write("Hello!", 6);
+        }
+
+        for (int i = 0; i < 2; i++)
+        {
+            delete base_files[i];
+            delete base32_files[i];
+        }
+    }
+    cout << endl;
 
     /**
      * Задание 3. Чисто виртуальные функции. Интерфейсы. Композиция классов.
@@ -612,13 +658,14 @@ int main()
      * Проверьте, что используемые ниже объекты работают так же, как объекты
      * классов `Base32File` и `RleFile`.
      */
-
-    /* {
-        Base32File2 b32f(new BaseFile(...));
-        RleFile2 rf(new Base32File(...));
+    cout << endl;
+    {
+        Base32File2 b32f(new BaseFile("txt_files/composition/b32fv2.txt", "w+"));
+        RleFile2 rf(new Base32File("txt_files/composition/rleFv2.txt", "w+"));
         write_int(b32f, 123456);
         write_int(rf, 123456);
-    } */
+    }
+    cout << endl;
 
     /**
      * Задание 3.3. Больше композиции!

@@ -1,8 +1,8 @@
 #include <iostream>
-#include <cstdio>
+#include "IFile.hpp"
 
 #define DEFAULT_TABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
-class BaseFile
+class BaseFile : public IFile
 {
 private:
     FILE *file;
@@ -23,8 +23,8 @@ public:
     long tell();
     bool seek(long offset);
 
-    virtual size_t write(const void *buf, size_t n_bytes);
-    virtual size_t read(void *buf, size_t max_bytes);
+    size_t write(const void *buf, size_t n_bytes);
+    size_t read(void *buf, size_t max_bytes);
 };
 
 class Base32File : public BaseFile
@@ -33,6 +33,7 @@ private:
     const char *table;
 
 public:
+    Base32File();
     Base32File(const char *path, const char *mode, const char *customTable = DEFAULT_TABLE);
 
     ~Base32File();
@@ -65,4 +66,4 @@ private:
 
 // Non classes function
 
-void write_int(BaseFile &file, int n);
+void write_int(IFile &file, int n);
