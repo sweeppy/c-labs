@@ -689,7 +689,7 @@ int main()
         file->write("Hello!", 6);
         delete file;
 
-        // Decode and print information in file to chat
+        // Decode and print information from file to terminal
         file = new Base32File2(
             new Base32File2(
                 new RleFile2(
