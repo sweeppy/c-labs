@@ -2,7 +2,7 @@
 # То есть, компилятор создаст объектный файл (.o),
 # но не будет пытаться создать исполняемый файл.
 
-objects = build/string.o build/file.o build/file2.o
+objects = build/string.o build/file.o build/file2.o build/coder.o
 
 flags = -g -Wall -Wextra -Wpedantic -Werror
 
@@ -18,6 +18,8 @@ build/file.o: src/file.cpp src/file.hpp
 build/file2.o: src/file2.cpp src/file2.hpp
 	clang++ $(flags) -c -o build/file2.o src/file2.cpp
 
+build/coder.o: src/coder.cpp src/coder.hpp
+	clang++ $(flags) -c -o build/coder.o src/coder.cpp
 
 # * Debug build
 # build/debug.out: $(objects) src/main.cpp

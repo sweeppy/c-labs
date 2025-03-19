@@ -666,6 +666,12 @@ int main()
         write_int(rf, 123456);
     }
     cout << endl;
+    /* {
+        Base32File2 b32f(new BaseFile(...));
+        RleFile2 rf(new Base32File(...));
+        write_int(b32f, 123456);
+        write_int(rf, 123456);
+    } */
 
     /**
      * Задание 3.3. Больше композиции!
@@ -676,6 +682,22 @@ int main()
      */
 
     {
+        IFile *file = new Base32File2(
+            new Base32File2(
+                new RleFile2(
+                    new BaseFile("txt_files/composition/more_composition.txt", "w+"))));
+        file->write("Hello!", 6);
+        delete file;
+
+        // Decode and print information in file to chat
+        file = new Base32File2(
+            new Base32File2(
+                new RleFile2(
+                    new BaseFile("txt_files/composition/more_composition.txt", "r"))));
+        char buf[100];
+        file->read(buf, 99);
+        cout << buf << endl;
+        delete file;
     }
 
     return 0;

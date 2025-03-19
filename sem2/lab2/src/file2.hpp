@@ -1,12 +1,14 @@
 #include "IFile.hpp"
+#define DEFAULT_TABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
 
 class Base32File2 : public IFile
 {
 private:
     IFile *file;
+    const char *table;
 
 public:
-    Base32File2(IFile *file);
+    Base32File2(IFile *file, const char *table = DEFAULT_TABLE);
 
     ~Base32File2();
 
