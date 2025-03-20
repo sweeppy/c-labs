@@ -49,7 +49,9 @@ int _encode32(const char *raw_data, int raw_size, char *dst, const char *table)
 int _decode32(const char *encoded_data, int encoded_size, char *dst, const char *table)
 {
     if (!encoded_data || !dst || encoded_size <= 0)
+    {
         return 1;
+    }
 
     int bit_pos = 0;
     int dst_pos = 0;
@@ -57,7 +59,7 @@ int _decode32(const char *encoded_data, int encoded_size, char *dst, const char 
 
     for (int i = 0; i < encoded_size; i++)
     {
-        int code_number = -1; // Число закодированное в символ (от 0 до 31)
+        int code_number = 0; // Число закодированное в символ (от 0 до 31)
         for (int j = 0; j < 32; j++)
         {
             if (table[j] == encoded_data[i])
@@ -66,8 +68,6 @@ int _decode32(const char *encoded_data, int encoded_size, char *dst, const char 
                 break;
             }
         }
-        if (code_number == -1)
-            return 2;
 
         for (int bit = 4; bit >= 0; bit--)
         {

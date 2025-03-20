@@ -1,5 +1,6 @@
 #include "file2.hpp"
 #include "coder.hpp"
+#include "colors.hpp"
 
 Base32File2::Base32File2(IFile *file, const char *table) : file(file), table(table) {}
 
@@ -38,6 +39,7 @@ size_t Base32File2::read(void *buf, size_t max_bytes)
     size_t encodedSize = _encoded32_size(max_bytes);
     char *encodedData = new char[encodedSize];
     size_t readSize = file->read(encodedData, encodedSize);
+    std::cout << "read size in b32_2: " << readSize << std::endl;
 
     char *decodedData = static_cast<char *>(buf);
     if (_decode32(encodedData, readSize, decodedData, table) != 0)
@@ -45,6 +47,7 @@ size_t Base32File2::read(void *buf, size_t max_bytes)
         delete[] encodedData;
         throw std::runtime_error("Failed to decode data in b32");
     }
+    std::cout << GREEN << "Base32 decoded data: " << decodedData << RESET << std::endl;
 
     delete[] encodedData;
     return _decoded32_size(readSize);
@@ -89,6 +92,7 @@ size_t RleFile2::read(void *buf, size_t max_bytes)
     {
         throw std::runtime_error("Failed to decode data in rle");
     }
+    std::cout << GREEN << "Rle decoded data:" << decodedData << RESET << std::endl;
 
     return readSize;
 }

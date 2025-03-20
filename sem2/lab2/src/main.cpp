@@ -686,7 +686,7 @@ int main()
             new Base32File2(
                 new RleFile2(
                     new BaseFile("txt_files/composition/more_composition.txt", "w+"))));
-        file->write("Hello!", 6);
+        file->write("Just some sentence.", 19);
         delete file;
 
         // Decode and print information from file to terminal
@@ -695,7 +695,7 @@ int main()
                 new RleFile2(
                     new BaseFile("txt_files/composition/more_composition.txt", "r"))));
         char buf[100];
-        file->read(buf, 99);
+        file->read(buf, 100);
         cout << buf << endl;
         delete file;
     }
