@@ -1,9 +1,0 @@
-{
-  "files.associations": {
-    "iostream": "cpp",
-    "string": "cpp",
-    "new": "cpp",
-    "istream": "cpp"
-  },
-  "CodeGPT.apiKey": "Ollama"
-}
