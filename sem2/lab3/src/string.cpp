@@ -97,38 +97,38 @@ MyString &MyString::operator+=(const char *other)
     return *this;
 }
 
-bool MyString::operator==(const MyString &other)
+bool MyString::operator==(const MyString &other) const
 {
     return ((length == other.length) &&
             (strcmp(data, other.data) == 0));
 }
-bool MyString::operator!=(const MyString &other)
+bool MyString::operator!=(const MyString &other) const
 {
     return !(*this == other);
 }
-bool MyString::operator<=(const MyString &other)
+bool MyString::operator<=(const MyString &other) const
 {
     return ((strcmp(data, other.data) <= 0));
 }
-bool MyString::operator<(const MyString &other)
+bool MyString::operator<(const MyString &other) const
 {
     return ((strcmp(data, other.data) < 0));
 }
 
-bool MyString::operator==(const char *other)
+bool MyString::operator==(const char *other) const
 {
     return ((length == strlen(other)) &&
             (strcmp(data, other) == 0));
 }
-bool MyString::operator!=(const char *other)
+bool MyString::operator!=(const char *other) const
 {
     return !(*this == other);
 }
-bool MyString::operator<=(const char *other)
+bool MyString::operator<=(const char *other) const
 {
     return ((length <= strlen(other)) && (strcmp(data, other) <= 0));
 }
-bool MyString::operator<(const char *other)
+bool MyString::operator<(const char *other) const
 {
     return ((length < strlen(other)) && (strcmp(data, other) < 0));
 }
@@ -171,7 +171,7 @@ void MyString::set_new_string(const char *str)
     allocate_and_copy(str, strlen(str));
 }
 
-void MyString::print()
+void MyString::print() const
 {
     if (!data)
         throw std::invalid_argument("String is not defined");
@@ -257,4 +257,24 @@ bool operator<=(const char *left, const MyString &right)
 bool operator<(const char *left, const MyString &right)
 {
     return ((strcmp(left, right.get_data()) < 0));
+}
+
+std::ostream &operator<<(std::ostream &os, const MyString &str)
+{
+    if (str.get_data())
+    {
+        os << str.get_data();
+    }
+    return os;
+}
+
+std::istream &operator>>(std::istream &is, MyString &str)
+{
+    str.read_line();
+    return is;
+}
+
+MyString addTxtExtension(const MyString &path)
+{
+    return path + ".txt";
 }

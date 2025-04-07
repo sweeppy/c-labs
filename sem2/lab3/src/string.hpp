@@ -22,15 +22,15 @@ public:
     MyString &operator+=(const MyString &other);
     MyString &operator+=(const char *other);
 
-    bool operator==(const MyString &other);
-    bool operator!=(const MyString &other);
-    bool operator<=(const MyString &other);
-    bool operator<(const MyString &other);
+    bool operator==(const MyString &other) const;
+    bool operator!=(const MyString &other) const;
+    bool operator<=(const MyString &other) const;
+    bool operator<(const MyString &other) const;
 
-    bool operator==(const char *other);
-    bool operator!=(const char *other);
-    bool operator<=(const char *other);
-    bool operator<(const char *other);
+    bool operator==(const char *other) const;
+    bool operator!=(const char *other) const;
+    bool operator<=(const char *other) const;
+    bool operator<(const char *other) const;
 
     char &operator[](size_t index);
 
@@ -40,7 +40,7 @@ public:
     void set(size_t i, char c);
 
     void set_new_string(const char *str);
-    void print();
+    void print() const;
     void read_line();
 
     const char *get_data() const;
@@ -55,3 +55,8 @@ bool operator==(const char *left, const MyString &right);
 bool operator!=(const char *left, const MyString &right);
 bool operator<=(const char *left, const MyString &right);
 bool operator<(const char *left, const MyString &right);
+
+std::ostream &operator<<(std::ostream &os, const MyString &str);
+std::istream &operator>>(std::istream &is, MyString &str);
+
+MyString addTxtExtension(const MyString &path);

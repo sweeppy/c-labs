@@ -2,7 +2,7 @@
 # То есть, компилятор создаст объектный файл (.o),
 # но не будет пытаться создать исполняемый файл.
 
-objects = build/string.o build/matrix.o
+objects = build/string.o build/matrix.o build/shortArray.o
 
 flags = -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
@@ -11,8 +11,12 @@ flags = -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
 build/string.o: src/string.cpp src/string.hpp
 	clang++ $(flags) -c -o build/string.o src/string.cpp
+
 build/matrix.o: src/matrix.cpp src/matrix.hpp
 	clang++ $(flags) -c -o build/matrix.o src/matrix.cpp
+
+build/shortArray.o: src/shortArray.cpp src/shortArray.hpp
+	clang++ $(flags) -c -o build/shortArray.o src/shortArray.cpp
 	
 # build/file.o: src/file.cpp src/file.hpp
 # 	clang++ $(flags) -c -o build/file.o src/file.cpp

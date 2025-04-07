@@ -20,6 +20,7 @@
 #include "string.hpp"
 #include "matrix.hpp"
 #include "colors.hpp"
+#include "shortArray.hpp"
 
 using std::cout;
 using std::endl;
@@ -161,7 +162,7 @@ int main()
      */
 
     cout << endl;
-    cout << GREEN << "Allocation:" << RESET << endl;
+    cout << PURPLE << "Allocation:" << RESET << endl;
     {
         MyString s1("abc");
         MyString s2 = s1 + "ccc";
@@ -228,13 +229,13 @@ int main()
      * Проверьте работу этих операторов на следующем примере.
      */
 
-    /* {
+    {
         MyString s("123");
-        std::cout << "This is my string: ' << s << "'\n";
+        std::cout << "This is my string: '" << s << "'\n";
         std::cout << "Enter your string: ";
         std::cin >> s;
         std::cout << "Your string: '" << s << "'\n";
-    } */
+    }
 
     /**
      * Задание 2. Константные методы.
@@ -269,9 +270,33 @@ int main()
      *
      * Продемонстрируйте ниже работу класса.
      */
-
+    cout << endl;
+    cout << PURPLE << "ShortArray Task:" << RESET << endl;
     {
+        ShortArray arr;
+        arr.push(10);
+        arr.push(20);
+        arr.push(30);
+
+        std::cout << "Array size: " << arr.size() << std::endl;
+        std::cout << "Elements: ";
+        for (size_t i = 0; i < arr.size(); ++i)
+        {
+            std::cout << arr[i] << " ";
+        }
+        std::cout << std::endl;
+
+        std::cout << "Popped: " << arr.pop() << std::endl;
+        arr.resize(5, 99);
+
+        std::cout << "After resize: ";
+        for (size_t i = 0; i < arr.size(); ++i)
+        {
+            std::cout << arr[i] << " ";
+        }
+        std::cout << std::endl;
     }
+    cout << endl;
 
     /**
      * Задание 3.2. Объединения.
@@ -296,8 +321,135 @@ int main()
      * хранения памяти.
      */
 
+    cout << endl;
+    cout << PURPLE << "ShortArray Union Task:" << RESET << endl;
     {
+        cout << YELLOW << "=== Testing ShortArray (stack storage) ==="
+             << RESET << endl;
+
+        ShortArray arr_stack(5, 42);
+
+        // param constructor stack
+        assert(arr_stack.size() == 5);
+        for (size_t i = 0; i < arr_stack.size(); ++i)
+        {
+            assert(arr_stack[i] == 42);
+        }
+        cout << GREEN "Constructor with parameters (stack): OK"
+             << RESET << endl;
+
+        // push/pop stack
+        arr_stack.push(99);
+        assert(arr_stack.size() == 6);
+        assert(arr_stack[5] == 99);
+
+        short val = arr_stack.pop();
+        assert(val == 99);
+        assert(arr_stack.size() == 5);
+        cout << GREEN "Push/pop (stack): OK"
+             << RESET << endl;
+
+        // [] stack
+        arr_stack[2] = 77;
+        assert(arr_stack[2] == 77);
+        cout << GREEN << "Operator [] (stack): OK"
+             << RESET << endl;
+
+        // resize stack
+        arr_stack.resize(3);
+        assert(arr_stack.size() == 3);
+        cout << GREEN << "Resize smaller (stack): OK"
+             << RESET << endl;
+
+        // resize stack
+        arr_stack.resize(5, 100);
+        assert(arr_stack.size() == 5);
+        assert(arr_stack[3] == 100);
+        assert(arr_stack[4] == 100);
+        cout << GREEN << "Resize larger within stack: OK"
+             << RESET << endl;
+
+        cout << YELLOW << "\n=== Testing ShortArray (heap storage) ==="
+             << RESET << endl;
+        ShortArray arr_heap(20, 55);
+
+        // param constructor heap
+        assert(arr_heap.size() == 20);
+        for (size_t i = 0; i < arr_heap.size(); ++i)
+        {
+            assert(arr_heap[i] == 55);
+        }
+        cout << GREEN << "Constructor with parameters (heap): OK"
+             << RESET << endl;
+
+        // push/pop heap
+        arr_heap.push(123);
+        assert(arr_heap.size() == 21);
+        assert(arr_heap[20] == 123);
+
+        val = arr_heap.pop();
+        assert(val == 123);
+        assert(arr_heap.size() == 20);
+        cout << GREEN << "Push/pop (heap): OK"
+             << RESET << endl;
+
+        // [] heap
+        arr_heap[10] = 777;
+        assert(arr_heap[10] == 777);
+        cout << GREEN << "Operator [] (heap): OK"
+             << RESET << endl;
+
+        // resize to stack
+        arr_heap.resize(5);
+        assert(arr_heap.size() == 5);
+        cout << GREEN << "Resize to stack size: OK"
+             << RESET << endl;
+
+        // resize to heap
+        arr_heap.resize(25, 200);
+        assert(arr_heap.size() == 25);
+        assert(arr_heap[24] == 200);
+        cout << GREEN << "Resize back to heap: OK"
+             << RESET << endl;
+
+        // copy stack
+        ShortArray arr_copy1(arr_stack);
+        assert(arr_copy1.size() == arr_stack.size());
+        for (size_t i = 0; i < arr_copy1.size(); ++i)
+        {
+            assert(arr_copy1[i] == arr_stack[i]);
+        }
+        cout << GREEN << "Copy constructor (stack->stack): OK"
+             << RESET << endl;
+
+        // copy heap
+        ShortArray arr_copy2(arr_heap);
+        assert(arr_copy2.size() == arr_heap.size());
+        for (size_t i = 0; i < arr_copy2.size(); ++i)
+        {
+            assert(arr_copy2[i] == arr_heap[i]);
+        }
+        cout << GREEN << "Copy constructor (heap->heap): OK"
+             << RESET << endl;
+
+        // move stack
+        ShortArray arr_move1(std::move(arr_stack));
+        assert(arr_move1.size() == 5);
+        assert(arr_stack.size() == 0);
+        cout << GREEN << "Move constructor (stack): OK"
+             << RESET << endl;
+
+        // move heap
+        ShortArray arr_move2(std::move(arr_heap));
+        assert(arr_move2.size() == 25);
+        assert(arr_heap.size() == 0);
+        cout << GREEN << "Move constructor (heap): OK"
+             << RESET << endl;
+
+        cout << GREEN << "\n=== All tests passed successfully! ==="
+             << RESET << endl;
     }
+    cout << endl;
 
     /**
      * Задание 3.3. Выравнивание и битовые поля.
