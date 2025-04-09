@@ -280,7 +280,7 @@ int main()
 
         std::cout << "Array size: " << arr.size() << std::endl;
         std::cout << "Elements: ";
-        for (size_t i = 0; i < arr.size(); ++i)
+        for (size_t i = 0; i < arr.size(); i++)
         {
             std::cout << arr[i] << " ";
         }
@@ -290,7 +290,7 @@ int main()
         arr.resize(5, 99);
 
         std::cout << "After resize: ";
-        for (size_t i = 0; i < arr.size(); ++i)
+        for (size_t i = 0; i < arr.size(); i++)
         {
             std::cout << arr[i] << " ";
         }
@@ -331,7 +331,7 @@ int main()
 
         // param constructor stack
         assert(arr_stack.size() == 5);
-        for (size_t i = 0; i < arr_stack.size(); ++i)
+        for (size_t i = 0; i < arr_stack.size(); i++)
         {
             assert(arr_stack[i] == 42);
         }
@@ -375,7 +375,8 @@ int main()
 
         // param constructor heap
         assert(arr_heap.size() == 20);
-        for (size_t i = 0; i < arr_heap.size(); ++i)
+
+        for (size_t i = 0; i < arr_heap.size(); i++)
         {
             assert(arr_heap[i] == 55);
         }
@@ -415,7 +416,7 @@ int main()
         // copy stack
         ShortArray arr_copy1(arr_stack);
         assert(arr_copy1.size() == arr_stack.size());
-        for (size_t i = 0; i < arr_copy1.size(); ++i)
+        for (size_t i = 0; i < arr_copy1.size(); i++)
         {
             assert(arr_copy1[i] == arr_stack[i]);
         }
@@ -425,7 +426,7 @@ int main()
         // copy heap
         ShortArray arr_copy2(arr_heap);
         assert(arr_copy2.size() == arr_heap.size());
-        for (size_t i = 0; i < arr_copy2.size(); ++i)
+        for (size_t i = 0; i < arr_copy2.size(); i++)
         {
             assert(arr_copy2[i] == arr_heap[i]);
         }
@@ -448,6 +449,8 @@ int main()
 
         cout << GREEN << "\n=== All tests passed successfully! ==="
              << RESET << endl;
+
+        cout << BLUE << "Size of the ShortArray: " << sizeof(ShortArray) << RESET << endl;
     }
     cout << endl;
 
