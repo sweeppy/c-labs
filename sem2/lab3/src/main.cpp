@@ -17,10 +17,11 @@
 #include <utility>
 #include <cassert>
 #include <iostream>
-#include "string.hpp"
 #include "matrix.hpp"
 #include "colors.hpp"
 #include "shortArray.hpp"
+#include "workerDb.hpp"
+#include "file.hpp"
 
 using std::cout;
 using std::endl;
@@ -490,14 +491,18 @@ int main()
      *
      * Используйте для хранения строковых данных ваш класс MyString.
      */
-
-    /* {
+    cout << endl;
+    cout << PURPLE << "WorkerDb Task 4.1: " << RESET << endl;
+    {
         WorkerDb db;
-        db["Ivanov"] = WorkerData("Ivan", 34, ...);
-        db["Petrov"] = WorkerData("Petr", 43, ...);
+        db["Ivanov"] = WorkerData("Ivan", 34, 10000.0, "intern");
+        db["Petrov"] = WorkerData("Petr", 43, 50000.0, "leader");
         std::cout << "Ivanov's name = " << db["Ivanov"].name << "\n";
         std::cout << "Petrov's age = " << db["Petrov"].age << "\n";
-    } */
+        std::cout << "Ivanov's salary: " << db["Ivanov"].salary << "\n";
+        std::cout << "Petrov's postion: " << db["Petrov"].position << endl;
+    }
+    cout << endl;
 
     /**
      * Задание 4.2. Итератор.
@@ -540,16 +545,17 @@ int main()
      *
      * Проверьте ниже работу итератора.
      */
-
-    /* {
+    cout << endl;
+    {
         WorkerDb db;
-        db["Ivanov"] = WorkerData("Ivan", 34, ...);
-        db["Petrov"] = WorkerData("Petr", 43, ...);
+        db["Ivanov"] = WorkerData("Ivan", 34, 10000.0, "intern");
+        db["Petrov"] = WorkerData("Petr", 43, 50000.0, "leader");
         for (auto it = db.begin(); it != db.end(); ++it)
         {
             std::cout << it.key() << " -> " << it->name << '\n';
         }
-    } */
+    }
+    cout << endl;
 
     /**
      * Задание 4.3. Работа "прикладного программиста".
@@ -560,6 +566,18 @@ int main()
      * возраст сотрудников. Эти функции не должны быть дружественными классу
      * `WorkerDb`.
      */
+    cout << endl;
+    {
+        WorkerDb db;
+        db["Ivanov"] = WorkerData("Ivan", 34, 10000.0, "intern");
+        db["Petrov"] = WorkerData("Petr", 43, 50000.0, "leader");
+        db["Sidorov"] = WorkerData("Sidor", 29, 30000.0, "developer");
+
+        print_db(db);
+
+        std::cout << CYAN << "Average age: " << get_avg_age(db) << RESET << "\n";
+    }
+    cout << endl;
 
     /**
      * Задание 5. Неявно определенные операторы. Удаление операторов.
@@ -571,9 +589,41 @@ int main()
      * словом `delete`, но определите их move-аналоги в этом классе.
      * Продемонстрируйте их работу.
      */
-
+    cout << endl;
     {
+        cout << CYAN << "=== BaseFile Test===" << RESET << endl;
+
+        cout << GREEN << "Creating file1 (test.txt)" << RESET << endl;
+        BaseFile file1("test.txt", "w+");
+        file1.write_raw("Hello", 5);
+        cout << "file1 is_open: " << file1.is_open() << endl;
+
+        cout << YELLOW << "\nUsing move constructor (file2 = std::move(file1))" << RESET << endl;
+        BaseFile file2(std::move(file1));
+
+        cout << "file1 is_open after move: " << file1.is_open() << endl;
+        cout << "file2 is_open: " << file2.is_open() << endl;
+        cout << "Position in file2: " << file2.tell() << endl;
+
+        cout << YELLOW << "\nCreating file3 (temp.txt)" << RESET << endl;
+        BaseFile file3("temp.txt", "w+");
+
+        cout << YELLOW << "Using move assignment (file3 = std::move(file2))" << RESET << endl;
+        file3 = std::move(file2);
+
+        cout << "file2 is_open after move: " << file2.is_open() << endl;
+        cout << "file3 is_open: " << file3.is_open() << endl;
+        cout << "Position in file3: " << file3.tell() << endl;
+
+        cout << YELLOW << "\nReading data from file3:" << RESET << endl;
+        file3.seek(0);
+        char buffer[6] = {0};
+        size_t read = file3.read_raw(buffer, 5);
+        cout << "Read " << read << " bytes: " << buffer << endl;
+
+        cout << CYAN << "\n=== Test Complete ===" << RESET << endl;
     }
+    cout << endl;
 
     /**
      * Задание 6. Оператор неявного приведения типа.

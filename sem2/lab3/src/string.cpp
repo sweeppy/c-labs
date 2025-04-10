@@ -13,7 +13,8 @@ void MyString::free_memory()
 }
 void MyString::allocate_and_copy(const char *source, size_t len)
 {
-    std::cout << BLUE << "New memory for String has been allocated" << RESET << std::endl;
+    // * uncomment this to show initial tasks
+    // std::cout << BLUE << "New memory for String has been allocated" << RESET << std::endl;
     data = new char[len + 1];
     strncpy(data, source, len);
     data[len] = '\0';
