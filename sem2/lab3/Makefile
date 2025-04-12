@@ -2,7 +2,7 @@
 # То есть, компилятор создаст объектный файл (.o),
 # но не будет пытаться создать исполняемый файл.
 
-objects = build/string.o build/matrix.o build/shortArray.o build/workerDb.o build/file.o
+objects = build/string.o build/matrix.o build/shortArray.o build/workerDb.o build/file.o build/boolArray.o
 
 flags = -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
@@ -23,6 +23,9 @@ build/workerDb.o: src/workerDb.cpp src/workerDb.hpp
 	
 build/file.o: src/file.cpp src/file.hpp
 	clang++ $(flags) -c -o build/file.o src/file.cpp
+
+build/boolArray.o: src/boolArray.cpp src/boolArray.hpp
+	clang++ $(flags) -c -o build/boolArray.o src/boolArray.cpp
 
 # * Debug build
 # build/debug.out: $(objects) src/main.cpp

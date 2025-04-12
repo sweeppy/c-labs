@@ -22,6 +22,7 @@
 #include "shortArray.hpp"
 #include "workerDb.hpp"
 #include "file.hpp"
+#include "boolArray.hpp"
 
 using std::cout;
 using std::endl;
@@ -639,8 +640,9 @@ int main()
      *
      * Класс должен поддерживать следующее поведение:
      */
-
-    /* {
+    cout << endl;
+    cout << PURPLE << "BoolArray Task: " << RESET << endl;
+    {
         /// Создается массив из 10 значений false
         BoolArray ar1(10);
 
@@ -654,42 +656,60 @@ int main()
         ar1[4] = ar1[6] = true;
 
         /// Над полученными значениями выполняем логические операции
-        ar1[2] = (!ar1[6] && ar1[8] || (ar1[0] != true));
+        ar1[2] = ((!ar1[6] && ar1[8]) || (ar1[0] != true));
 
         /// Выведем массив на печать
         std::cout << "[";
-        for (int i = 0; i < ar1.size(); ++i) {
-            if (i > 0) std::cout << ", ";
+        for (size_t i = 0; i < ar1.size(); ++i)
+        {
+            if (i > 0)
+                std::cout << ", ";
             std::cout << ar1[i];
         }
         std::cout << "]\n";
 
         /// Выведем массив на печать по-другому
         std::cout << "[";
-        for (int i = 0, printed = 0; i < ar1.size(); ++i) {
-            if (ar1[i]) {
-                if (printed++ > 0) std::cout << ", ";
+        for (size_t i = 0, printed = 0; i < ar1.size(); ++i)
+        {
+            if (ar1[i])
+            {
+                if (printed++ > 0)
+                    std::cout << ", ";
                 std::cout << i;
             }
         }
         std::cout << "]\n";
 
-
-       /// Метод `resize` изменяет размер массива. Если новый размер больше, то
-       /// новые значения дополняются заданным значением (по умолчанию false). Если
-       /// новый размер меньше, то конец массива отбрасывается.
+        /// Метод `resize` изменяет размер массива. Если новый размер больше, то
+        /// новые значения дополняются заданным значением (по умолчанию false). Если
+        /// новый размер меньше, то конец массива отбрасывается.
 
         ar1.resize(12, true);
         /// выведите массив на печать
 
-        //...
+        std::cout << "[";
+        for (size_t i = 0; i < ar1.size(); ++i)
+        {
+            if (i > 0)
+                std::cout << ", ";
+            std::cout << ar1[i];
+        }
+        std::cout << "]\n";
 
         ar1.resize(4, true);
         /// выведите массив на печать снова
 
-        //...
-
-    } */
+        std::cout << "[";
+        for (size_t i = 0; i < ar1.size(); ++i)
+        {
+            if (i > 0)
+                std::cout << ", ";
+            std::cout << ar1[i];
+        }
+        std::cout << "]\n";
+    }
+    cout << endl;
 
     return 0;
 }
