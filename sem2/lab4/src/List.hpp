@@ -1,5 +1,6 @@
 #include "Circle.hpp"
 #include <iostream>
+#include "colors.hpp"
 class List
 {
 private:
@@ -23,7 +24,26 @@ private:
 
     size_t m_size;
 
+    // * For sorting
+    Node *split(Node *head);
+    Node *merge(Node *left, Node *right);
+    Node *merge_sort(Node *head);
+
 public:
+    List();
+    ~List();
+
     void add_head(const Circle &circle);
     void add_tail(const Circle &circle);
+
+    bool remove_first(const Circle &target);
+    unsigned int remove_all(const Circle &target);
+
+    void clear();
+
+    void sort_by_square();
+
+    void print(std::ostream &os) const;
 };
+
+std::ostream &operator<<(std::ostream &os, const List &list);
