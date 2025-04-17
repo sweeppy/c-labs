@@ -174,6 +174,42 @@ void List::print(std::ostream &os) const
     }
 }
 
+void List::write_to_file(const char *filename)
+{
+    std::ofstream fout(filename);
+
+    if (!fout)
+        throw std::runtime_error("Error was occurred while trying to write information in file");
+
+    Node *current = Head.pNext;
+    while (current != &Tail)
+    {
+        fout << current->m_Data.get_pointer().get_x() << " "
+             << current->m_Data.get_pointer().get_y() << " "
+             << current->m_Data.get_radius() << std::endl;
+        current = current->pNext;
+    }
+
+    fout.close();
+}
+
+void List::read_form_file(const char *filename)
+{
+    std::ifstream fin(filename);
+    if (!fin)
+        throw std::runtime_error("Error was occurred while trying to read from file");
+
+    clear(); // * clear current list
+
+    Circle temp;
+    while (fin >> temp)
+    {
+        add_tail(temp);
+    }
+
+    fin.close();
+}
+
 std::ostream &operator<<(std::ostream &os, const List &list)
 {
     list.print(os);

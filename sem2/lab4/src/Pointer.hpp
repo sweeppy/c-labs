@@ -11,6 +11,7 @@ public:
     Pointer(float x, float y) : x(x), y(y) {}
 
     bool operator==(const Pointer &other);
+    Pointer &operator=(const Pointer &other);
 
     float get_x() const;
     float get_y() const;

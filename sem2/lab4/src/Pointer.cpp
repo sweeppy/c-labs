@@ -5,6 +5,14 @@ bool Pointer::operator==(const Pointer &other)
     return x == other.x && y == other.y;
 }
 
+Pointer &Pointer::operator=(const Pointer &other)
+{
+    x = other.x;
+    y = other.y;
+
+    return *this;
+}
+
 float Pointer::get_x() const
 {
     return x;

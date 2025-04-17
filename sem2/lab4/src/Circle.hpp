@@ -19,7 +19,11 @@ public:
 
     const Pointer &get_pointer() const;
 
-    double get_square() const;
+    float get_square() const;
     float get_radius() const;
+
+    void setPointer(float x, float y);
+    void setRadius(float radius);
 };
 std::ostream &operator<<(std::ostream &os, const Circle circle);
+std::istream &operator>>(std::istream &is, Circle &circle);

@@ -1,5 +1,7 @@
-#include "Circle.hpp"
 #include <iostream>
+#include <fstream>
+
+#include "Circle.hpp"
 #include "colors.hpp"
 class List
 {
@@ -44,6 +46,9 @@ public:
     void sort_by_square();
 
     void print(std::ostream &os) const;
+
+    void write_to_file(const char *filename);
+    void read_form_file(const char *filename);
 };
 
 std::ostream &operator<<(std::ostream &os, const List &list);

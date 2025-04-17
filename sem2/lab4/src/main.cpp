@@ -1,8 +1,11 @@
 #include "List.hpp"
 #include "colors.hpp"
+#include <fstream>
 
+using std::cin;
 using std::cout;
 using std::endl;
+using std::ofstream;
 
 int main()
 {
@@ -18,5 +21,26 @@ int main()
     list.sort_by_square();
     cout << "After sort:\n"
          << list << endl;
+
+    const char *folder = "txt_files/";
+    cout << YELLOW << "Enter Output File Name: " << RESET;
+
+    char filename[80];
+    cin >> filename;
+
+    cout << endl;
+    char full_path[100];
+    strcpy(full_path, folder);
+    strcat(full_path, filename);
+    strcat(full_path, ".txt");
+
+    list.write_to_file(full_path);
+
+    list.clear();
+    list.read_form_file(full_path);
+
+    cout << "List from file:\n"
+         << list << endl;
+
     return 0;
 }
