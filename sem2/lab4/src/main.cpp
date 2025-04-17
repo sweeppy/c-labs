@@ -34,7 +34,9 @@ int main()
     strcat(full_path, filename);
     strcat(full_path, ".txt");
 
-    list.write_to_file(full_path);
+    std::ofstream fout(full_path);
+    fout << list;
+    fout.close();
 
     list.clear();
     list.read_form_file(full_path);

@@ -47,7 +47,6 @@ public:
 
     void print(std::ostream &os) const;
 
-    void write_to_file(const char *filename);
     void read_form_file(const char *filename);
 };
 

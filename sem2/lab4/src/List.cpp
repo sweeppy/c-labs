@@ -169,28 +169,9 @@ void List::print(std::ostream &os) const
     os << "-------------------------\n";
     while (current != &Tail)
     {
-        os << CYAN << current->m_Data << RESET << "\n-------------------------\n";
+        os << current->m_Data << "\n-------------------------\n";
         current = current->pNext;
     }
-}
-
-void List::write_to_file(const char *filename)
-{
-    std::ofstream fout(filename);
-
-    if (!fout)
-        throw std::runtime_error("Error was occurred while trying to write information in file");
-
-    Node *current = Head.pNext;
-    while (current != &Tail)
-    {
-        fout << current->m_Data.get_pointer().get_x() << " "
-             << current->m_Data.get_pointer().get_y() << " "
-             << current->m_Data.get_radius() << std::endl;
-        current = current->pNext;
-    }
-
-    fout.close();
 }
 
 void List::read_form_file(const char *filename)

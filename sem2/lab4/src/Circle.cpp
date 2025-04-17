@@ -40,12 +40,25 @@ std::ostream &operator<<(std::ostream &os, const Circle circle)
 
 std::istream &operator>>(std::istream &is, Circle &circle)
 {
-    float x, y;
-    float radius;
+    char sep; // * means symbol ,
+    float x, y, radius;
 
-    is >> x >> y >> radius;
+    // * Skip word Center (
+    is.ignore(100, '(');
+
+    is >> x;
+
+    is >> sep >> y;
+
+    // * Skip word Radius:
+    is.ignore(100, ':');
+
+    is >> radius;
+
+    // * Skip other symbols
+    is.ignore(100, '\n');
+
     circle.setPointer(x, y);
     circle.setRadius(radius);
-
     return is;
 }
