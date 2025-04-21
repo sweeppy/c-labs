@@ -39,7 +39,7 @@ int main()
     fout.close();
 
     list.clear();
-    list.read_form_file(full_path);
+    list.read_from_file(full_path);
 
     cout << "List from file:\n"
          << list << endl;

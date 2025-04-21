@@ -47,7 +47,7 @@ public:
 
     void print(std::ostream &os) const;
 
-    void read_form_file(const char *filename);
+    void read_from_file(const char *filename);
 };
 
 std::ostream &operator<<(std::ostream &os, const List &list);

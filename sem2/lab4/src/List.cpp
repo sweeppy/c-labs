@@ -174,7 +174,7 @@ void List::print(std::ostream &os) const
     }
 }
 
-void List::read_form_file(const char *filename)
+void List::read_from_file(const char *filename)
 {
     std::ifstream fin(filename);
     if (!fin)
